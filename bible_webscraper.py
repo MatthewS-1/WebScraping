@@ -8,12 +8,15 @@ soup = BeautifulSoup(page.content, 'lxml')
 unprocessed = soup.find_all("a", href=True)
 links = []
 
+# get each href that leads to a .txt file
 for link in unprocessed:
     href = link.get("href")
     if href[-4:] == ".txt":
         links.append(href)
 
 
+# processes each line of the bible and removes the location of each line
+# example: "1:1 and _ said ..." would become "and _ said ..."
 def process(string):
     seen = 0
     for i in range(len(string)):
@@ -24,7 +27,8 @@ def process(string):
     return ""
 
 
-file = open("bible.txt", "w")
+# go through each link we have and take the lines from it
+file = open("bible.txt", "w") # store data in this file
 for link in links:
     page = requests.get('http://www.stewartonbibleschool.org/bible/text/' + link)
     soup = BeautifulSoup(page.content, 'lxml')
